@@ -1,0 +1,166 @@
+/* 移动优先的响应式设计 */
+
+/* 基础容器 */
+.container {
+  width: 100%;
+  max-width: 100%;
+  padding: 0 var(--spacing-md);
+  margin: 0 auto;
+}
+
+/* 平板 (640px+) */
+@media (min-width: 640px) {
+  .container {
+    max-width: 640px;
+    padding: 0 var(--spacing-lg);
+  }
+}
+
+/* 小屏桌面 (768px+) */
+@media (min-width: 768px) {
+  .container {
+    max-width: 728px;
+  }
+}
+
+/* 中等屏幕 (1024px+) */
+@media (min-width: 1024px) {
+  .container {
+    max-width: 960px;
+  }
+}
+
+/* 大屏幕 (1280px+) */
+@media (min-width: 1280px) {
+  .container {
+    max-width: 1200px;
+  }
+}
+
+/* 超大屏幕 (1536px+) */
+@media (min-width: 1536px) {
+  .container {
+    max-width: 1400px;
+  }
+}
+
+/* Grid 响应式 */
+.grid-responsive {
+  display: grid;
+  gap: var(--spacing-md);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .grid-responsive {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid-responsive {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1280px) {
+  .grid-responsive {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Flex 响应式布局 */
+.flex-responsive {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+@media (min-width: 768px) {
+  .flex-responsive {
+    flex-direction: row;
+  }
+}
+
+/* 隐藏/显示 */
+.hide-mobile {
+  display: none;
+}
+
+.hide-tablet {
+  display: none;
+}
+
+.hide-desktop {
+  display: block;
+}
+
+@media (min-width: 640px) {
+  .hide-tablet {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .hide-mobile {
+    display: block;
+  }
+
+  .hide-desktop {
+    display: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hide-tablet {
+    display: block;
+  }
+}
+
+/* 字体响应式 */
+.text-responsive {
+  font-size: 0.875rem;
+}
+
+@media (min-width: 768px) {
+  .text-responsive {
+    font-size: 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .text-responsive {
+    font-size: 1.125rem;
+  }
+}
+
+/* 间距响应式 */
+.px-responsive {
+  padding-left: var(--spacing-md);
+  padding-right: var(--spacing-md);
+}
+
+@media (min-width: 768px) {
+  .px-responsive {
+    padding-left: var(--spacing-lg);
+    padding-right: var(--spacing-lg);
+  }
+}
+
+@media (min-width: 1024px) {
+  .px-responsive {
+    padding-left: var(--spacing-xl);
+    padding-right: var(--spacing-xl);
+  }
+}
+
+/* 宽度响应式 */
+.w-responsive {
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .w-responsive {
+    width: auto;
+  }
+}
