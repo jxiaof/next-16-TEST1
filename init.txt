@@ -1,0 +1,390 @@
+root/
+│
+│ ══════════════════════════════════════════════════════════════
+│ 📁 配置文件层 (Configuration Layer)
+│ ══════════════════════════════════════════════════════════════
+│
+├── .env.example              # 🔧 环境变量模版 (禁止提交 .env)
+├── .env.local                # 🔧 本地开发环境变量 (禁止提交, .gitignore)
+├── .eslintrc.json            # 🔧 ESLint 代码检查配置
+├── .prettierrc               # 🔧 Prettier 格式化配置
+├── .gitignore                # 🔧 Git 忽略规则
+├── .dockerignore             # 🔧 Docker 构建忽略规则
+├── .nvmrc                    # 🔧 Node 版本固定 (v20.x LTS)
+├── package.json              # 📦 pnpm 依赖管理
+├── pnpm-lock.yaml            # 📦 pnpm 锁定文件 (必须提交)
+├── tsconfig.json             # 🔷 TypeScript 全局配置
+├── tsconfig.base.json        # 🔷 TypeScript 基础配置 (共享)
+├── next.config.mjs           # ⚡ Next.js 配置
+├── drizzle.config.ts         # 🗄️ Drizzle ORM 配置
+├── vitest.config.ts          # 🧪 Vitest 单元测试配置
+├── playwright.config.ts      # 🎭 Playwright E2E 测试配置
+├── middleware.ts             # 🚦 Next.js 全局中间件 (鉴权/重定向/i18n)
+├── Dockerfile                # Docker 镜像构建文件
+├── Makefile                  # 🛠️ 项目自动化命令入口
+├── README.md                 # 📖 项目说明文档
+│
+│ ══════════════════════════════════════════════════════════════
+│ 📁 CI/CD 与基础设施 (DevOps Layer)
+│ ══════════════════════════════════════════════════════════════
+│
+├── .github/
+│   └── workflows/
+│       ├── ci.yml            # 🔄 CI 流程 (Lint → Test → Build)
+│       ├── deploy.yml        # 🚀 部署流程 (Vercel/自建)
+│       └── security.yml      # 🔐 安全扫描 (可选)
+│
+├── infra/                    # 🐳 基础设施配置
+│   ├── docker-compose.yml    # 本地开发环境 (PostgreSQL, Redis)
+│   ├── docker-compose.prod.yml # 生产环境配置参考
+│   └── .env.example          # 基础设施环境变量示例
+│
+├── deploy/                   # 【部署配置】(新增)
+│   ├── nginx/
+│   │   ├── nginx.conf        # Nginx 主配置
+│   │   ├── sites/
+│   │   │   ├── app.conf      # 应用反向代理配置
+│   │   │   └── ssl.conf      # SSL 证书配置
+│   │   └── snippets/
+│   │       ├── cache.conf    # 缓存策略
+│   │       ├── security.conf # 安全头配置
+│   │       └── gzip.conf     # Gzip 压缩配置
+│   ├── docker/
+│   │   ├── docker-compose.prod.yml  # 生产环境 Docker Compose
+│   │   └── docker-compose.dev.yml   # 开发环境 Docker Compose
+│   └── cdn/
+│       └── cloudflare.md     # CDN 配置说明
+│
+├── scripts/                  # 📜 自动化脚本 (tsx 运行)
+│   ├── db-seed.ts            # 数据库种子数据
+│   ├── db-migrate.ts         # 数据库迁移脚本
+│   ├── db-reset.ts           # 数据库重置脚本
+│   ├── generate-types.ts     # 生成 API 类型定义
+│   ├── validate-env.ts       # 验证环境变量完整性
+│   └── health-check.ts       # 服务健康检查
+│
+├── public/                   # 📁 静态资源 (CDN 直接服务)
+│   ├── favicon.ico
+│   ├── robots.txt
+│   ├── sitemap.xml
+│   └── images/
+│       ├── logo.svg
+│       └── ...               # 业务图片资源
+│
+│ ══════════════════════════════════════════════════════════════
+│ 📁 源代码层 (Source Code Layer)
+│ ══════════════════════════════════════════════════════════════
+│
+├── src/
+│   │
+│   │ ════════════════════════════════════════════════════════
+│   │ 🔙 后端核心域 (Backend Domain) - 严禁引入 React
+│   │ ════════════════════════════════════════════════════════
+│   │
+│   ├── backend/
+│   │   │
+│   │   ├── context/              # 📌 [Context] 请求上下文
+│   │   │   ├── definition.ts     # AppCtx 类型定义
+│   │   │   └── factory.ts        # 从 Header/Session 构建 Context
+│   │   │
+│   │   ├── model/                # 📊 [Layer 1] 数据模型层
+│   │   │   ├── schema.ts         # 统一导出所有 schema
+│   │   │   ├── relations.ts      # 表关系定义
+│   │   │   └── tables/           # 按领域拆分表定义
+│   │   │       ├── index.ts      # 统一导出
+│   │   │       ├── users.ts      # 用户表
+│   │   │       ├── posts.ts      # 文章表
+│   │   │       ├── comments.ts   # 评论表
+│   │   │       └── ...           # 🔄 业务增长: 按领域添加新表
+│   │   │
+│   │   ├── dao/                  # 📁 [Layer 2] 数据访问层 (纯 CRUD)
+│   │   │   ├── index.ts          # 统一导出
+│   │   │   ├── base-dao.ts       # 基础 DAO 抽象类
+│   │   │   ├── user-dao.ts       # 用户数据访问
+│   │   │   ├── post-dao.ts       # 文章数据访问
+│   │   │   ├── comment-dao.ts    # 评论数据访问
+│   │   │   └── ...               # 🔄 业务增长: 1:1 对应 model/tables
+│   │   │
+│   │   ├── service/              # ⚙️ [Layer 3] 业务逻辑层
+│   │   │   ├── index.ts          # 统一导出
+│   │   │   ├── auth/             # 🔐 认证模块
+│   │   │   │   ├── index.ts      # 模块入口 (login, register, logout)
+│   │   │   │   ├── errors.ts     # 模块特定错误码
+│   │   │   │   └── utils.ts      # 模块内部工具
+│   │   │   ├── user/             # 👤 用户模块
+│   │   │   │   ├── index.ts
+│   │   │   │   └── errors.ts
+│   │   │   ├── post/             # 📝 文章模块
+│   │   │   │   ├── index.ts
+│   │   │   │   └── errors.ts
+│   │   │   ├── comment/          # 💬 评论模块
+│   │   │   │   ├── index.ts
+│   │   │   │   └── errors.ts
+│   │   │   └── ...               # 🔄 业务增长: 按业务领域添加模块
+│   │   │
+│   │   ├── pkg/                  # 🧰 [Infra] 基础设施层
+│   │   │   ├── config/           # 配置管理
+│   │   │   │   ├── env.ts        # Zod 强类型环境变量
+│   │   │   │   └── constants.ts  # 应用常量
+│   │   │   ├── db/               # 数据库
+│   │   │   │   ├── index.ts      # Drizzle 单例
+│   │   │   │   └── migrations/   # 迁移文件目录
+│   │   │   ├── redis/            # 缓存
+│   │   │   │   └── index.ts      # Redis 单例
+│   │   │   ├── logger/           # 日志
+│   │   │   │   ├── index.ts      # Pino 日志实例
+│   │   │   │   └── security.ts   # 安全审计日志
+│   │   │   ├── auth/             # 认证工具
+│   │   │   │   ├── index.ts      # Session/JWT 管理
+│   │   │   │   └── permissions.ts# 权限定义
+│   │   │   ├── queue/            # 消息队列 (可选)
+│   │   │   │   └── index.ts      # BullMQ/Redis Queue
+│   │   │   ├── email/            # 邮件服务 (可选)
+│   │   │   │   └── index.ts      # Resend/SendGrid
+│   │   │   └── utils/            # 后端专用工具
+│   │   │       ├── crypto.ts     # 加密工具
+│   │   │       ├── jwt.ts        # JWT 工具
+│   │   │       └── id.ts         # ID 生成器 (nanoid/uuid)
+│   │   │
+│   │   └── __tests__/            # 🧪 后端单元测试
+│   │       ├── service/
+│   │       │   ├── auth.test.ts
+│   │       │   ├── post.test.ts
+│   │       │   └── ...
+│   │       └── dao/
+│   │           ├── user-dao.test.ts
+│   │           └── ...
+│   │
+│   │ ════════════════════════════════════════════════════════
+│   │ 🎨 前端核心域 (Frontend Domain) - React/Next.js
+│   │ ════════════════════════════════════════════════════════
+│   │
+│   ├── app/                  # 📱 [Router] App Router 路由层
+│   │   │
+│   │   ├── (auth)/           # 🔐 认证路由组 (无需登录)
+│   │   │   ├── layout.tsx    # 认证页面布局
+│   │   │   ├── login/
+│   │   │   │   ├── page.tsx
+│   │   │   │   ├── loading.tsx
+│   │   │   │   └── error.tsx
+│   │   │   ├── register/
+│   │   │   │   └── page.tsx
+│   │   │   ├── forgot-password/
+│   │   │   │   └── page.tsx
+│   │   │   └── ...           # 🔄 业务增长: OAuth, 2FA 等
+│   │   │
+│   │   ├── (main)/           # 🏠 主应用路由组 (需登录)
+│   │   │   ├── layout.tsx    # 主应用布局 (Sidebar + Header)
+│   │   │   ├── dashboard/
+│   │   │   │   ├── page.tsx
+│   │   │   │   ├── layout.tsx
+│   │   │   │   ├── loading.tsx
+│   │   │   │   └── error.tsx
+│   │   │   ├── posts/
+│   │   │   │   ├── page.tsx          # 文章列表
+│   │   │   │   ├── [id]/
+│   │   │   │   │   ├── page.tsx      # 文章详情
+│   │   │   │   │   └── edit/
+│   │   │   │   │       └── page.tsx  # 编辑文章
+│   │   │   │   └── new/
+│   │   │   │       └── page.tsx      # 新建文章
+│   │   │   ├── settings/
+│   │   │   │   ├── page.tsx
+│   │   │   │   ├── profile/
+│   │   │   │   │   └── page.tsx
+│   │   │   │   └── security/
+│   │   │   │       └── page.tsx
+│   │   │   └── ...           # 🔄 业务增长: 按功能模块添加路由
+│   │   │
+│   │   ├── (admin)/          # 👑 管理后台路由组 (需 Admin 权限)
+│   │   │   ├── layout.tsx
+│   │   │   ├── users/
+│   │   │   │   └── page.tsx
+│   │   │   └── ...           # 🔄 业务增长: 管理功能
+│   │   │
+│   │   ├── api/              # 🔌 Route Handlers (仅用于特殊场景)
+│   │   │   ├── webhooks/     # 第三方回调
+│   │   │   │   ├── stripe/
+│   │   │   │   │   └── route.ts
+│   │   │   │   └── github/
+│   │   │   │       └── route.ts
+│   │   │   └── health/       # 健康检查端点
+│   │   │       └── route.ts
+│   │   │
+│   │   ├── layout.tsx        # 根 Layout (全局 Providers)
+│   │   ├── page.tsx          # 首页 (Landing Page)
+│   │   ├── manifest.ts       # 动态 PWA Manifest
+│   │   ├── not-found.tsx     # 404 页面
+│   │   ├── error.tsx         # 全局错误边界
+│   │   ├── loading.tsx       # 全局加载状态
+│   │   └── globals.css       # 全局样式
+│   │
+│   ├── components/           # 🧩 [View] 组件层 (三级分层)
+│   │   │
+│   │   ├── ui/               # 📦 Level 1: 基础 UI 组件 (无业务逻辑)
+│   │   │   ├── button.tsx    # shadcn/ui 风格
+│   │   │   ├── input.tsx
+│   │   │   ├── form.tsx
+│   │   │   ├── dialog.tsx
+│   │   │   ├── toast.tsx
+│   │   │   ├── skeleton.tsx
+│   │   │   └── ...           # 🔄 按需添加: card, dropdown, etc.
+│   │   │
+│   │   ├── shared/           # 🔗 Level 2: 通用业务组件 (跨模块复用)
+│   │   │   ├── header.tsx    # 页面头部
+│   │   │   ├── sidebar.tsx   # 侧边栏
+│   │   │   ├── footer.tsx    # 页脚
+│   │   │   ├── data-table.tsx# 数据表格
+│   │   │   ├── pagination.tsx# 分页组件
+│   │   │   ├── empty-state.tsx# 空状态
+│   │   │   ├── error-boundary.tsx
+│   │   │   └── ...           # 🔄 按需添加: breadcrumb, avatar, etc.
+│   │   │
+│   │   └── responsive/   # 【响应式组件】
+│   │   │   ├── mobile-nav.tsx            # 移动端导航
+│   │   │   ├── desktop-nav.tsx           # 桌面端导航
+│   │   │   ├── responsive-container.tsx  # 响应式容器
+│   │   │   └── device-detector.tsx      # 设备检测组件
+│   │   │
+│   │   └── features/         # 🎯 Level 3: 领域功能组件 (业务闭环)
+│   │       ├── auth/         # 认证相关组件
+│   │       │   ├── login-form.tsx
+│   │       │   ├── register-form.tsx
+│   │       │   └── user-menu.tsx
+│   │       ├── post/         # 文章相关组件
+│   │       │   ├── post-editor/
+│   │       │   │   ├── index.tsx
+│   │       │   │   ├── use-post-editor.ts
+│   │       │   │   └── toolbar.tsx
+│   │       │   ├── post-card.tsx
+│   │       │   └── post-list.tsx
+│   │       ├── comment/      # 评论相关组件
+│   │       │   ├── comment-form.tsx
+│   │       │   └── comment-list.tsx
+│   │       └── ...           # 🔄 业务增长: 按领域添加
+│   │
+│   ├── api-client/           # 🌉 [Bridge] 前后端桥接层
+│   │   ├── wrapper.ts        # createAction 核心包装器
+│   │   ├── actions/          # Server Actions
+│   │   │   ├── index.ts
+│   │   │   ├── auth-actions.ts
+│   │   │   ├── post-actions.ts
+│   │   │   ├── user-actions.ts
+│   │   │   └── ...           # 🔄 1:1 对应 backend/service
+│   │   └── fetchers/         # 数据获取 (SWR/React Query)
+│   │       ├── index.ts
+│   │       ├── use-posts.ts
+│   │       ├── use-user.ts
+│   │       └── ...           # 🔄 按需添加数据 Hook
+│   │
+│   ├── hooks/                # 🪝 全局自定义 Hooks
+│   │   ├── index.ts
+│   │   ├── use-toast.ts          # Toast 通知
+│   │   ├── use-auth.ts           # 认证状态
+│   │   ├── use-media-query.ts    # 媒体查询 Hook
+│   │   ├── use-device.ts         # 设备检测 Hook
+│   │   ├── use-viewport.ts       # 视口尺寸 Hook
+│   │   ├── use-debounce.ts       # 防抖
+│   │   └── use-local-storage.ts  # 本地存储
+│   │
+│   ├── providers/            # 🔌 Context Providers
+│   │   ├── index.tsx         # 组合所有 Provider
+│   │   ├── theme-provider.tsx# 主题切换
+│   │   ├── query-provider.tsx# React Query
+│   │   ├── auth-provider.tsx # 认证状态
+│   │   └── toast-provider.tsx# Toast 通知
+│   │
+│   ├── lib/                  # 🔧 前端工具函数
+│   │   ├── cn.ts             # className 合并 (clsx + tailwind-merge)
+│   │   ├── format.ts         # 日期/数字格式化
+│   │   ├── api-client.ts     # fetch 封装
+│   │   ├── storage.ts        # localStorage 封装
+│   │   └── url.ts            # URL 处理
+│   │   └── responsive.ts     # 响应式工具函数
+│   ├── styles/              # 【样式层】(新增)
+│   │   ├── globals.css
+│   │   ├── variables.css    # CSS 变量定义
+│   │   └── responsive.css   # 响应式断点样式
+│   │
+│   └── __tests__/            # 🧪 前端组件测试
+│   │   ├── components/
+│   │   │   ├── ui/
+│   │   │   └── features/
+│   │   └── hooks/
+│   │
+│   │ ════════════════════════════════════════════════════════
+│   │ 🔗 共享域 (Common/Shared Domain) - 前后端共用
+│   │ ════════════════════════════════════════════════════════
+│   │
+│   ├── common/
+│   │   │
+│   │   ├── codes/                # 📟 业务状态码
+│   │   │   ├── index.ts
+│   │   │   ├── biz-codes.ts      # 业务状态码枚举
+│   │   │   └── http-codes.ts     # HTTP 状态码常量
+│   │   │
+│   │   ├── errors/               # ❌ 自定义异常
+│   │   │   ├── index.ts
+│   │   │   ├── app-error.ts      # 基础业务异常
+│   │   │   └── validation-error.ts# 校验异常
+│   │   │
+│   │   ├── types/                # 🔷 全局类型定义
+│   │   │   ├── index.ts
+│   │   │   ├── response.ts       # ApiResponse<T>
+│   │   │   ├── auth.ts           # CurrentUser, Session
+│   │   │   ├── pagination.ts     # 分页类型
+│   │   │   └── ...               # 🔄 按需添加
+│   │   │
+│   │   ├── schemas/              # ✅ Zod 校验规则 (Single Source of Truth)
+│   │   │   ├── index.ts
+│   │   │   ├── auth.ts           # loginSchema, registerSchema
+│   │   │   ├── post.ts           # createPostSchema, updatePostSchema
+│   │   │   ├── user.ts           # updateProfileSchema
+│   │   │   ├── pagination.ts     # paginationSchema
+│   │   │   └── ...               # 🔄 1:1 对应业务模块
+│   │   │
+│   │   ├── constants/            # 📌 全局常量
+│   │   │   ├── index.ts
+│   │   │   ├── roles.ts          # 角色枚举
+│   │   │   └── limits.ts         # 业务限制常量
+│   │   │   └── breakpoints.ts   # 响应式断点常量
+│   │   │
+│   │   └── utils/                # 🛠️ 共享工具函数
+│   │       ├── index.ts
+│   │       ├── string.ts         # 字符串处理
+│   │       ├── date.ts           # 日期处理
+│   │       └── validator.ts      # 通用校验函数
+│   │
+│   └── env.ts                    # 🌍 环境变量客户端入口
+│
+│ ══════════════════════════════════════════════════════════════
+│ 📁 测试层 (Testing Layer)
+│ ══════════════════════════════════════════════════════════════
+│
+├── tests/
+│   ├── integration/              # 🔗 集成测试
+│   │   ├── setup.ts              # 测试环境配置
+│   │   ├── api.test.ts           # API 端到端测试
+│   │   └── service.test.ts       # Service 层集成测试
+│   │
+│   ├── e2e/                      # 🎭 E2E 测试 (Playwright)
+│   │   ├── auth.spec.ts          # 认证流程测试
+│   │   ├── posts.spec.ts         # 文章功能测试
+│   │   └── fixtures/             # 测试固定数据
+│   │       └── test-data.json
+│   │
+│   └── fixtures/                 # 🏭 测试数据工厂
+│       ├── index.ts
+│       ├── user.factory.ts
+│       └── post.factory.ts
+│
+│ ══════════════════════════════════════════════════════════════
+│ 📁 文档层 (Documentation Layer)
+│ ══════════════════════════════════════════════════════════════
+│
+└── docs/
+    ├── api.md                    # API 接口文档
+    ├── architecture.md           # 架构说明
+    ├── deployment.md             # 部署指南
+    ├── contributing.md           # 贡献指南
+    └── troubleshooting.md        # 常见问题
